@@ -1,0 +1,515 @@
+{
+  "orders": [
+    {
+      "id": "SOM-EFB-6834",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "EFB-USER-1234",
+      "email": "test_player_1791720462401@somtopup.com",
+      "status": "Sugaya Lacag-bixin",
+      "createdAt": "2026-10-11T12:07:42.407Z",
+      "updatedAt": "2026-10-11T12:07:42.432Z",
+      "guestSessionId": "test_guest_efb_1791720462401",
+      "history": [
+        {
+          "status": "Sugaya Xaqiijin",
+          "timestamp": "2026-10-11T12:07:42.407Z",
+          "note": "Dalabka eFootball waa la diiwaangeliyay. Iimaylka: test_player_1791720462401@somtopup.com. Koodhka hubinta waxaa ku soo diri doona maamulaha."
+        },
+        {
+          "status": "Hubin ku socoto",
+          "timestamp": "2026-10-11T12:07:42.422Z",
+          "note": "Macmiilku wuxuu soo gudbiyay koodhka: SECRET-776655. Sugaya hubinta maamulaha."
+        },
+        {
+          "status": "Sugaya Lacag-bixin",
+          "timestamp": "2026-10-11T12:07:42.432Z",
+          "note": "Code verified in Gmail"
+        }
+      ],
+      "submittedVerificationCode": "SECRET-776655",
+      "verificationCodeSubmittedAt": "2026-10-11T12:07:42.422Z",
+      "verificationDecision": "approved",
+      "verificationDecisionAt": "2026-10-11T12:07:42.432Z",
+      "verificationDecisionBy": "Maamule"
+    },
+    {
+      "id": "SOM-PUB-9623",
+      "game": "PUBG Mobile",
+      "packageId": "pubg-60-uc",
+      "packageName": "Xirmo 60 UC",
+      "packageCredits": "60 UC",
+      "price": 0.99,
+      "currency": "USD",
+      "playerId": "7788990011",
+      "playerNickname": "SomaliSniper",
+      "paymentMethodId": "evc-plus",
+      "paymentMethodName": "EVC Plus",
+      "senderPhoneNumber": "615112233",
+      "paymentSubmittedAt": "2026-10-11T12:07:42.367Z",
+      "status": "Waa la dhammaystiray",
+      "createdAt": "2026-10-11T12:07:42.367Z",
+      "updatedAt": "2026-10-11T12:07:42.456Z",
+      "guestSessionId": "test_guest_pubg_1791720462230",
+      "history": [
+        {
+          "status": "Sugaya Hubin",
+          "timestamp": "2026-10-11T12:07:42.367Z",
+          "note": "Dalabka PUBG Mobile (60 UC) waa la gudbiyay. Tel diraha: 615112233"
+        },
+        {
+          "status": "Waa la dhammaystiray",
+          "timestamp": "2026-10-11T12:07:42.456Z",
+          "note": "Completed test"
+        }
+      ],
+      "adminNotes": "Completed test",
+      "completedAt": "2026-10-11T12:07:42.456Z"
+    },
+    {
+      "id": "SOM-PUB-3462",
+      "game": "PUBG Mobile",
+      "packageId": "pubg-60-uc",
+      "packageName": "Xirmo 60 UC",
+      "packageCredits": "60 UC",
+      "price": 0.99,
+      "currency": "USD",
+      "playerId": "7788990011",
+      "playerNickname": "SomaliSniper",
+      "paymentMethodId": "evc-plus",
+      "paymentMethodName": "EVC Plus",
+      "senderPhoneNumber": "615112233",
+      "paymentSubmittedAt": "2026-10-11T12:07:31.613Z",
+      "status": "Sugaya Hubin",
+      "createdAt": "2026-10-11T12:07:31.613Z",
+      "updatedAt": "2026-10-11T12:07:31.613Z",
+      "history": [
+        {
+          "status": "Sugaya Hubin",
+          "timestamp": "2026-10-11T12:07:31.613Z",
+          "note": "Dalabka PUBG Mobile (60 UC) waa la gudbiyay. Tel diraha: 615112233"
+        }
+      ]
+    },
+    {
+      "id": "SOM-EFB-2260",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "Rttgfrd",
+      "email": "abdikadirmohamed682@gmail.com",
+      "status": "Sugaya Xaqiijin",
+      "createdAt": "2026-10-11T11:35:16.783Z",
+      "updatedAt": "2026-10-11T11:35:16.783Z",
+      "history": [
+        {
+          "status": "Sugaya Xaqiijin",
+          "timestamp": "2026-10-11T11:35:16.783Z",
+          "note": "Dalabka eFootball waa la diiwaangeliyay. Iimaylka: abdikadirmohamed682@gmail.com. Koodhka hubinta waxaa ku soo diri doona maamulaha."
+        }
+      ]
+    },
+    {
+      "id": "SOM-PUB-1578",
+      "game": "PUBG Mobile",
+      "packageId": "pubg-60-uc",
+      "packageName": "Xirmo 60 UC",
+      "packageCredits": "60 UC",
+      "price": 0.99,
+      "currency": "USD",
+      "playerId": "77446464",
+      "playerNickname": "Bahamians",
+      "paymentMethodId": "pay-edahab",
+      "paymentMethodName": "e-Dahab (Somtel)",
+      "senderPhoneNumber": "615080557",
+      "paymentSubmittedAt": "2026-10-11T10:36:10.930Z",
+      "status": "Sugaya Hubin",
+      "createdAt": "2026-10-11T10:36:10.930Z",
+      "updatedAt": "2026-10-11T10:36:10.930Z",
+      "history": [
+        {
+          "status": "Sugaya Hubin",
+          "timestamp": "2026-10-11T10:36:10.930Z",
+          "note": "Dalabka PUBG Mobile (60 UC) waa la gudbiyay. Tel diraha: 615080557"
+        }
+      ]
+    },
+    {
+      "id": "SOM-EFB-7310",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "Gehehdhheh",
+      "email": "szbshshbsjsjs@gmail.com",
+      "status": "Hubin ku socoto",
+      "createdAt": "2026-10-11T10:32:56.800Z",
+      "updatedAt": "2026-10-11T10:33:27.566Z",
+      "history": [
+        {
+          "status": "Sugaya Xaqiijin",
+          "timestamp": "2026-10-11T10:32:56.800Z",
+          "note": "Dalabka eFootball waa la diiwaangeliyay. Iimaylka: szbshshbsjsjs@gmail.com. Koodhka hubinta waxaa ku soo diri doona maamulaha."
+        },
+        {
+          "status": "Hubin ku socoto",
+          "timestamp": "2026-10-11T10:33:27.566Z",
+          "note": "Macmiilku wuxuu soo gudbiyay koodhka: Shyssh. Sugaya hubinta maamulaha."
+        }
+      ],
+      "submittedVerificationCode": "Shyssh",
+      "verificationCodeSubmittedAt": "2026-10-11T10:33:27.566Z"
+    },
+    {
+      "id": "SOM-EFB-5987",
+      "game": "eFootball",
+      "packageId": "efb-320-coins",
+      "packageName": "Xirmo 320 Coins",
+      "packageCredits": "320 Coins",
+      "price": 2.85,
+      "currency": "USD",
+      "playerId": "77334455",
+      "email": "customer2@gmail.com",
+      "status": "Xaqiijintu way fashilantay",
+      "createdAt": "2026-10-11T10:22:43.367Z",
+      "updatedAt": "2026-10-11T10:22:53.760Z",
+      "history": [
+        {
+          "status": "Sugaya Xaqiijin",
+          "timestamp": "2026-10-11T10:22:43.367Z",
+          "note": "Dalabka eFootball waa la diiwaangeliyay. Iimaylka: customer2@gmail.com. Koodhka hubinta waxaa ku soo diri doona maamulaha."
+        },
+        {
+          "status": "Hubin ku socoto",
+          "timestamp": "2026-10-11T10:22:49.456Z",
+          "note": "Macmiilku wuxuu soo gudbiyay koodhka: 000000. Sugaya hubinta maamulaha."
+        },
+        {
+          "status": "Xaqiijintu way fashilantay",
+          "timestamp": "2026-10-11T10:22:53.760Z",
+          "note": "Xaqiijinta waa la diiday: Koodhka aad soo dirtay kuma jiro iimaylkaaga."
+        }
+      ],
+      "submittedVerificationCode": "000000",
+      "verificationCodeSubmittedAt": "2026-10-11T10:22:49.456Z",
+      "verificationDecision": "rejected",
+      "verificationDecisionAt": "2026-10-11T10:22:53.760Z",
+      "verificationRejectReason": "Koodhka aad soo dirtay kuma jiro iimaylkaaga."
+    },
+    {
+      "id": "SOM-EFB-4623",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "88123499",
+      "email": "customer1@gmail.com",
+      "status": "Sugaya Hubin",
+      "createdAt": "2026-10-11T10:22:02.637Z",
+      "updatedAt": "2026-10-11T10:22:38.328Z",
+      "history": [
+        {
+          "status": "Sugaya Xaqiijin",
+          "timestamp": "2026-10-11T10:22:02.637Z",
+          "note": "Dalabka eFootball waa la diiwaangeliyay. Iimaylka: customer1@gmail.com. Koodhka hubinta waxaa ku soo diri doona maamulaha."
+        },
+        {
+          "status": "Hubin ku socoto",
+          "timestamp": "2026-10-11T10:22:17.071Z",
+          "note": "Macmiilku wuxuu soo gudbiyay koodhka: 749102. Sugaya hubinta maamulaha."
+        },
+        {
+          "status": "Sugaya Lacag-bixin",
+          "timestamp": "2026-10-11T10:22:30.393Z",
+          "note": "Koodhku waa sax oo waa lagu hubiyay Gmail."
+        },
+        {
+          "status": "Sugaya Hubin",
+          "timestamp": "2026-10-11T10:22:38.328Z",
+          "note": "Macmiilku wuxuu xaqiijiyay bixinta lacagta. Lambarka diraha: 615482390."
+        }
+      ],
+      "submittedVerificationCode": "749102",
+      "verificationCodeSubmittedAt": "2026-10-11T10:22:17.071Z",
+      "verificationDecision": "approved",
+      "verificationDecisionAt": "2026-10-11T10:22:30.393Z",
+      "verificationDecisionBy": "Maamule",
+      "paymentMethodId": "evc-plus",
+      "paymentMethodName": "EVC Plus",
+      "senderPhoneNumber": "615482390",
+      "paymentSubmittedAt": "2026-10-11T10:22:38.328Z"
+    },
+    {
+      "id": "SOM-PUB-6854",
+      "game": "PUBG Mobile",
+      "packageId": "pubg-60-uc",
+      "packageName": "Xirmo 60 UC",
+      "packageCredits": "60 UC",
+      "price": 0.99,
+      "currency": "USD",
+      "playerId": "598712345",
+      "playerNickname": "SomAli99",
+      "paymentMethodId": "evc-plus",
+      "paymentMethodName": "EVC Plus",
+      "senderPhoneNumber": "615482390",
+      "paymentSubmittedAt": "2026-10-11T10:21:57.308Z",
+      "status": "Sugaya Hubin",
+      "createdAt": "2026-10-11T10:21:57.308Z",
+      "updatedAt": "2026-10-11T10:21:57.308Z",
+      "history": [
+        {
+          "status": "Sugaya Hubin",
+          "timestamp": "2026-10-11T10:21:57.308Z",
+          "note": "Dalabka PUBG Mobile (60 UC) waa la gudbiyay. Tel diraha: 615482390"
+        }
+      ]
+    }
+  ],
+  "verificationRequests": [
+    {
+      "id": "VR-EFB-6834",
+      "orderId": "SOM-EFB-6834",
+      "clientToken": "d39529bd-235d-4f64-928d-d2b76f407d61",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "EFB-USER-1234",
+      "email": "test_player_1791720462401@somtopup.com",
+      "attemptsCount": 1,
+      "status": "verified",
+      "createdAt": "2026-10-11T12:07:42.407Z",
+      "updatedAt": "2026-10-11T12:07:42.432Z",
+      "expiresAt": "2026-10-11T12:17:42.407Z",
+      "guestSessionId": "test_guest_efb_1791720462401",
+      "submittedCode": "SECRET-776655",
+      "codeSubmittedAt": "2026-10-11T12:07:42.422Z",
+      "decisionBy": "Maamule",
+      "decisionAt": "2026-10-11T12:07:42.432Z"
+    },
+    {
+      "id": "VR-EFB-2260",
+      "orderId": "SOM-EFB-2260",
+      "clientToken": "04cafdd0-bd97-471c-8052-c940cc5b5539",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "Rttgfrd",
+      "email": "abdikadirmohamed682@gmail.com",
+      "attemptsCount": 0,
+      "status": "pending_email_code",
+      "createdAt": "2026-10-11T11:35:16.783Z",
+      "updatedAt": "2026-10-11T11:35:16.783Z",
+      "expiresAt": "2026-10-11T11:45:16.783Z"
+    },
+    {
+      "id": "VR-EFB-7310",
+      "orderId": "SOM-EFB-7310",
+      "clientToken": "1c00c357-8da0-45db-b159-2fb7d82a2fea",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "Gehehdhheh",
+      "email": "szbshshbsjsjs@gmail.com",
+      "attemptsCount": 1,
+      "status": "code_submitted_pending_admin",
+      "createdAt": "2026-10-11T10:32:56.800Z",
+      "updatedAt": "2026-10-11T10:33:27.566Z",
+      "expiresAt": "2026-10-11T10:42:56.800Z",
+      "submittedCode": "Shyssh",
+      "codeSubmittedAt": "2026-10-11T10:33:27.566Z"
+    },
+    {
+      "id": "VR-EFB-5987",
+      "orderId": "SOM-EFB-5987",
+      "clientToken": "ed3647d7-b34b-4970-b3b6-79e19b22a71d",
+      "game": "eFootball",
+      "packageId": "efb-320-coins",
+      "packageName": "Xirmo 320 Coins",
+      "packageCredits": "320 Coins",
+      "price": 2.85,
+      "currency": "USD",
+      "playerId": "77334455",
+      "email": "customer2@gmail.com",
+      "attemptsCount": 1,
+      "status": "verification_failed",
+      "createdAt": "2026-10-11T10:22:43.367Z",
+      "updatedAt": "2026-10-11T10:22:53.760Z",
+      "expiresAt": "2026-10-11T10:32:43.367Z",
+      "submittedCode": "000000",
+      "codeSubmittedAt": "2026-10-11T10:22:49.456Z",
+      "decisionBy": "Maamule",
+      "decisionAt": "2026-10-11T10:22:53.760Z",
+      "rejectReason": "Koodhka aad soo dirtay kuma jiro iimaylkaaga."
+    },
+    {
+      "id": "VR-EFB-4623",
+      "orderId": "SOM-EFB-4623",
+      "clientToken": "ed3e0596-e040-4c56-98b6-e8928993fbce",
+      "game": "eFootball",
+      "packageId": "efb-130-coins",
+      "packageName": "Xirmo 130 Coins",
+      "packageCredits": "130 Coins",
+      "price": 1.2,
+      "currency": "USD",
+      "playerId": "88123499",
+      "email": "customer1@gmail.com",
+      "attemptsCount": 1,
+      "status": "verified",
+      "createdAt": "2026-10-11T10:22:02.637Z",
+      "updatedAt": "2026-10-11T10:22:30.393Z",
+      "expiresAt": "2026-10-11T10:32:02.637Z",
+      "submittedCode": "749102",
+      "codeSubmittedAt": "2026-10-11T10:22:17.071Z",
+      "decisionBy": "Maamule",
+      "decisionAt": "2026-10-11T10:22:30.393Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "NOTIF-1791720462422-725",
+      "type": "efootball_code_submitted",
+      "title": "Koodh La Soo Diray: VR-EFB-6834 (test_player_1791720462401@somtopup.com)",
+      "message": "Macmiilku wuxuu soo gudbiyay koodhka: SECRET-776655. Fadlan ku hubi Gmail si aad u oggolaato ama u diiddo.",
+      "referenceId": "VR-EFB-6834",
+      "createdAt": "2026-10-11T12:07:42.422Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791720462407-690",
+      "type": "efootball_new_request",
+      "title": "Codsiga Hubinta Iimaylka: SOM-EFB-6834",
+      "message": "Macmiilka test_player_1791720462401@somtopup.com (ID: EFB-USER-1234) wuxuu sugayaa in koodhka loo diro. Xirmo: 130 Coins.",
+      "referenceId": "VR-EFB-6834",
+      "createdAt": "2026-10-11T12:07:42.407Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791720462367-25",
+      "type": "pubg_order",
+      "title": "Dalab Cusub: SOM-PUB-9623 (PUBG Mobile)",
+      "message": "7788990011 (SomaliSniper) wuxuu dalbaday 60 UC ($0.99). Tel: 615112233",
+      "referenceId": "SOM-PUB-9623",
+      "createdAt": "2026-10-11T12:07:42.367Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791720451613-669",
+      "type": "pubg_order",
+      "title": "Dalab Cusub: SOM-PUB-3462 (PUBG Mobile)",
+      "message": "7788990011 (SomaliSniper) wuxuu dalbaday 60 UC ($0.99). Tel: 615112233",
+      "referenceId": "SOM-PUB-3462",
+      "createdAt": "2026-10-11T12:07:31.613Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791718516783-702",
+      "type": "efootball_new_request",
+      "title": "Codsiga Hubinta Iimaylka: SOM-EFB-2260",
+      "message": "Macmiilka abdikadirmohamed682@gmail.com (ID: Rttgfrd) wuxuu sugayaa in koodhka loo diro. Xirmo: 130 Coins.",
+      "referenceId": "VR-EFB-2260",
+      "createdAt": "2026-10-11T11:35:16.783Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714970931-633",
+      "type": "pubg_order",
+      "title": "Dalab Cusub: SOM-PUB-1578 (PUBG Mobile)",
+      "message": "77446464 (Bahamians) wuxuu dalbaday 60 UC ($0.99). Tel: 615080557",
+      "referenceId": "SOM-PUB-1578",
+      "createdAt": "2026-10-11T10:36:10.930Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714807566-659",
+      "type": "efootball_code_submitted",
+      "title": "Koodh La Soo Diray: VR-EFB-7310 (szbshshbsjsjs@gmail.com)",
+      "message": "Macmiilku wuxuu soo gudbiyay koodhka: Shyssh. Fadlan ku hubi Gmail si aad u oggolaato ama u diiddo.",
+      "referenceId": "VR-EFB-7310",
+      "createdAt": "2026-10-11T10:33:27.566Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714776801-690",
+      "type": "efootball_new_request",
+      "title": "Codsiga Hubinta Iimaylka: SOM-EFB-7310",
+      "message": "Macmiilka szbshshbsjsjs@gmail.com (ID: Gehehdhheh) wuxuu sugayaa in koodhka loo diro. Xirmo: 130 Coins.",
+      "referenceId": "VR-EFB-7310",
+      "createdAt": "2026-10-11T10:32:56.800Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714169456-5",
+      "type": "efootball_code_submitted",
+      "title": "Koodh La Soo Diray: VR-EFB-5987 (customer2@gmail.com)",
+      "message": "Macmiilku wuxuu soo gudbiyay koodhka: 000000. Fadlan ku hubi Gmail si aad u oggolaato ama u diiddo.",
+      "referenceId": "VR-EFB-5987",
+      "createdAt": "2026-10-11T10:22:49.456Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714163367-636",
+      "type": "efootball_new_request",
+      "title": "Codsiga Hubinta Iimaylka: SOM-EFB-5987",
+      "message": "Macmiilka customer2@gmail.com (ID: 77334455) wuxuu sugayaa in koodhka loo diro. Xirmo: 320 Coins.",
+      "referenceId": "VR-EFB-5987",
+      "createdAt": "2026-10-11T10:22:43.367Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714158328-670",
+      "type": "payment_submitted",
+      "title": "Lacag-bixin La Soo Diray: SOM-EFB-4623",
+      "message": "eFootball (130 Coins) - Tel Diraha: 615482390. Sugaya hubinta maamulaha.",
+      "referenceId": "SOM-EFB-4623",
+      "createdAt": "2026-10-11T10:22:38.328Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714137071-996",
+      "type": "efootball_code_submitted",
+      "title": "Koodh La Soo Diray: VR-EFB-4623 (customer1@gmail.com)",
+      "message": "Macmiilku wuxuu soo gudbiyay koodhka: 749102. Fadlan ku hubi Gmail si aad u oggolaato ama u diiddo.",
+      "referenceId": "VR-EFB-4623",
+      "createdAt": "2026-10-11T10:22:17.071Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714122638-523",
+      "type": "efootball_new_request",
+      "title": "Codsiga Hubinta Iimaylka: SOM-EFB-4623",
+      "message": "Macmiilka customer1@gmail.com (ID: 88123499) wuxuu sugayaa in koodhka loo diro. Xirmo: 130 Coins.",
+      "referenceId": "VR-EFB-4623",
+      "createdAt": "2026-10-11T10:22:02.637Z",
+      "read": false
+    },
+    {
+      "id": "NOTIF-1791714117309-451",
+      "type": "pubg_order",
+      "title": "Dalab Cusub: SOM-PUB-6854 (PUBG Mobile)",
+      "message": "598712345 (SomAli99) wuxuu dalbaday 60 UC ($0.99). Tel: 615482390",
+      "referenceId": "SOM-PUB-6854",
+      "createdAt": "2026-10-11T10:21:57.308Z",
+      "read": false
+    }
+  ]
+}

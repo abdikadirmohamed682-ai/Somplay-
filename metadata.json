@@ -1,0 +1,6 @@
+{
+  "name": "SomTopUp - Suuqa Ciyaaraha Soomaaliyeed",
+  "description": "Suuqa ugu weyn ee lagu shubto ciyaaraha PUBG Mobile iyo eFootball dalka Soomaaliya, bixinta degdegga ah ee EVC Plus, Zaad, Sahal iyo e-Dahab.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
