@@ -1,4 +1,4 @@
-export type GameType = 'PUBG Mobile' | 'eFootball';
+export type GameType = 'PUBG Mobile' | 'eFootball' | 'Free Fire' | 'Call of Duty: Mobile';
 
 export type VerificationStatus =
   | 'pending_email_code'
@@ -44,12 +44,13 @@ export interface AdminNotification {
 export type OrderStatus =
   | 'Sugaya Xaqiijin'          // Verification Pending (eFootball created)
   | 'Hubin ku socoto'          // Under Review (eFootball customer submitted code)
-  | 'Sugaya Lacag-bixin'        // Awaiting Payment (Verification approved)
+  | 'Sugaya Lacag-bixin'        // Awaiting Payment / Unpaid (Initial order created before payment)
   | 'Xaqiijintu way fashilantay'// Verification Rejected
-  | 'Sugaya Hubin'              // Payment Under Review (Sender phone submitted)
-  | 'Waa la shaqaynayaa'        // Processing (Payment confirmed, top-up in progress)
+  | 'Sugaya Hubin'              // Payment Verification Pending (Customer submitted payment reference)
+  | 'Waa la shaqaynayaa'        // Processing (Payment verified, UC delivery in progress)
   | 'Waa la dhammaystiray'      // Completed (Top-up fulfilled)
-  | 'Wuu fashilmay';            // Failed (Payment rejected or fulfillment failed)
+  | 'Wuu fashilmay'             // Failed (Payment verification rejected)
+  | 'Waa la kansalay';          // Cancelled
 
 export interface OrderStatusHistory {
   status: OrderStatus;
@@ -84,10 +85,17 @@ export interface Order {
   paymentMethodName?: string;
   walletProvider?: 'hormuud' | 'sahal';
   senderPhoneNumber?: string; // Lambarka aad lacagta ka dirtay
+  transactionReference?: string; // Tixraaca lacag-bixinta (EVC/Sahal reference number)
   receiptImage?: string; // Optional uploaded transfer receipt image (base64 or URL)
   paymentSubmittedAt?: string;
   paymentConfirmedAt?: string;
   paymentRejectedAt?: string;
+  
+  // Customer account link
+  userId?: string;
+  userEmail?: string;
+  pepAwarded?: boolean;
+  pepEarned?: number;
   
   // Status & timestamps
   status: OrderStatus;
@@ -104,9 +112,55 @@ export interface Order {
   guestSessionId?: string;
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  name?: string;
+  role: 'customer' | 'admin';
+  defaultPlayerId?: string;
+  pepBalance?: number;
+  createdAt: string;
+}
+
+export interface PepSettings {
+  conversionRatePerUsd: number; // Configurable PEP per $1 USD (e.g. 100 PEP = $1 USD)
+  earningRatePerUsd: number;    // Configurable PEP earned per $1 spent on PUBG (e.g. 20 PEP / $1)
+  targetUsdValue: number;       // Standard equivalent of USD $10
+  enabled: boolean;
+}
+
+export interface PepLedgerEntry {
+  id: string;
+  userId: string;
+  userEmail: string;
+  type: 'earned' | 'redeemed' | 'adjusted' | 'reversed';
+  amount: number;
+  balanceAfter: number;
+  orderId?: string;
+  description: string;
+  adminNotes?: string;
+  createdAt: string;
+}
+
+export interface PepAccountSummary {
+  pepBalance: number;
+  targetPep: number;
+  progressPercentage: number;
+  conversionRatePerUsd: number;
+  earningRatePerUsd: number;
+  ledger: PepLedgerEntry[];
+}
+
+export interface AuthResponse {
+  success: boolean;
+  token?: string;
+  user?: UserProfile;
+  message?: string;
+  error?: string;
+}
+
 /**
  * Public, privacy-safe Order summary returned to customer-facing views.
- * Strictly excludes emails, player IDs, verification codes, phone numbers, and admin notes.
  */
 export interface PublicOrderSummary {
   id: string;
@@ -117,6 +171,10 @@ export interface PublicOrderSummary {
   price: number;
   currency: string;
   status: OrderStatus;
+  playerId?: string;
+  playerNickname?: string;
+  transactionReference?: string;
+  failureReason?: string;
   createdAt: string;
   updatedAt: string;
   completedAt?: string;

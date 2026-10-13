@@ -1,6 +1,32 @@
 {
   "orders": [
     {
+      "id": "SOM-PUB-6475",
+      "game": "PUBG Mobile",
+      "packageId": "pubg-60-uc",
+      "packageName": "Xirmo 60 UC",
+      "packageCredits": "60 UC",
+      "price": 0.99,
+      "currency": "USD",
+      "playerId": "5123984521",
+      "playerNickname": "SomaliPro99",
+      "paymentMethodId": "pay-hormuud",
+      "paymentMethodName": "Hormuud (EVC Plus)",
+      "walletProvider": "hormuud",
+      "senderPhoneNumber": "615948077",
+      "paymentSubmittedAt": "2026-10-12T18:48:33.068Z",
+      "status": "Sugaya Hubin",
+      "createdAt": "2026-10-12T18:48:33.068Z",
+      "updatedAt": "2026-10-12T18:48:33.068Z",
+      "history": [
+        {
+          "status": "Sugaya Hubin",
+          "timestamp": "2026-10-12T18:48:33.068Z",
+          "note": "Dalabka PUBG Mobile (60 UC) waa la gudbiyay. Tel diraha: 615948077"
+        }
+      ]
+    },
+    {
       "id": "SOM-EFB-6834",
       "game": "eFootball",
       "packageId": "efb-130-coins",
@@ -386,6 +412,15 @@
   ],
   "notifications": [
     {
+      "id": "NOTIF-1791830913068-537",
+      "type": "pubg_order",
+      "title": "Dalab Cusub: SOM-PUB-6475 (PUBG Mobile)",
+      "message": "5123984521 (SomaliPro99) wuxuu dalbaday 60 UC ($0.99). Tel: 615948077",
+      "referenceId": "SOM-PUB-6475",
+      "createdAt": "2026-10-12T18:48:33.068Z",
+      "read": false
+    },
+    {
       "id": "NOTIF-1791720462422-725",
       "type": "efootball_code_submitted",
       "title": "Koodh La Soo Diray: VR-EFB-6834 (test_player_1791720462401@somtopup.com)",
@@ -511,5 +546,23 @@
       "createdAt": "2026-10-11T10:21:57.308Z",
       "read": false
     }
-  ]
+  ],
+  "wallets": {
+    "hormuud": {
+      "provider": "hormuud",
+      "name": "Hormuud (EVC Plus)",
+      "serviceCode": "712",
+      "merchantWallet": "615948077",
+      "instructions": "Garaac koodhka tooska ah ee USSD ama u wareeji lacagta lambarka koontada kor ku xusan.",
+      "active": true
+    },
+    "sahal": {
+      "provider": "sahal",
+      "name": "Sahal (Golis)",
+      "serviceCode": "",
+      "merchantWallet": "678123490",
+      "instructions": "U wareeji lacagta akoonka Sahal ee kor ku xusan adoo isticmaalaya adeegga Sahal.",
+      "active": true
+    }
+  }
 }

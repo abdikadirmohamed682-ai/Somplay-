@@ -61,6 +61,11 @@ import {
   Mail,
   User,
   ShieldCheck,
+  Award,
+  History,
+  Sliders,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -76,6 +81,7 @@ type AdminTab =
   | 'packages'
   | 'banners'
   | 'payments'
+  | 'pep'
   | 'telegram'
   | 'analytics';
 
@@ -100,6 +106,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [telegramSettings, setTelegramSettings] = useState<TelegramSettings>(getTelegramSettings());
   const [analytics, setAnalytics] = useState<VisitorAnalyticsData>(getAnalytics());
+
+  // PEP Currency Management State
+  const [pepSettings, setPepSettings] = useState<{
+    conversionRatePerUsd: number;
+    earningRatePerUsd: number;
+    targetUsdValue: number;
+    enabled: boolean;
+  }>({
+    conversionRatePerUsd: 100,
+    earningRatePerUsd: 20,
+    targetUsdValue: 10,
+    enabled: true,
+  });
+  const [pepLedger, setPepLedger] = useState<any[]>([]);
+  const [customerUsers, setCustomerUsers] = useState<any[]>([]);
+  const [adjustUserId, setAdjustUserId] = useState('');
+  const [adjustAmount, setAdjustAmount] = useState<number | ''>('');
+  const [adjustReason, setAdjustReason] = useState('');
+  const [adjustNotes, setAdjustNotes] = useState('');
+  const [isSavingPepSettings, setIsSavingPepSettings] = useState(false);
+  const [isAdjustingPep, setIsAdjustingPep] = useState(false);
 
   // Verification Requests Filter & State
   const [verifFilterStatus, setVerifFilterStatus] = useState<string>('All');
@@ -172,6 +199,93 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         if (notifData.notifications) setNotifications(notifData.notifications);
       }
     } catch (e) {}
+
+    // Fetch PEP Internal Currency Settings & Ledger
+    try {
+      const pepSetRes = await fetch('/api/admin/pep/settings', {
+        headers: { Authorization: 'Bearer authorized_session' },
+      });
+      if (pepSetRes.ok) {
+        const pepSetData = await pepSetRes.json();
+        if (pepSetData.settings) setPepSettings(pepSetData.settings);
+      }
+    } catch (e) {}
+
+    try {
+      const pepLedgerRes = await fetch('/api/admin/pep/ledger', {
+        headers: { Authorization: 'Bearer authorized_session' },
+      });
+      if (pepLedgerRes.ok) {
+        const pepLedgerData = await pepLedgerRes.json();
+        if (pepLedgerData.ledger) setPepLedger(pepLedgerData.ledger);
+        if (pepLedgerData.users) setCustomerUsers(pepLedgerData.users);
+      }
+    } catch (e) {}
+  };
+
+  const handleSavePepSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingPepSettings(true);
+    try {
+      const res = await fetch('/api/admin/pep/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer authorized_session',
+        },
+        body: JSON.stringify(pepSettings),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showFeedback(data.message || 'Habaynta PEP si guul leh ayaa loo keydiyay.');
+        setPepSettings(data.settings);
+        await loadData();
+      } else {
+        showFeedback(data.error || 'Khalad ayaa dhacay.');
+      }
+    } catch (e) {
+      showFeedback('Khalad xagga xiriirka ah ayaa dhacay.');
+    } finally {
+      setIsSavingPepSettings(false);
+    }
+  };
+
+  const handleAdjustPep = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adjustUserId || adjustAmount === '' || !adjustReason.trim()) {
+      showFeedback('Fadlan buuxi dhammaan meelaha bannaan (Customer, Qaddarka, iyo Sababta).');
+      return;
+    }
+    setIsAdjustingPep(true);
+    try {
+      const res = await fetch('/api/admin/pep/adjust', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer authorized_session',
+        },
+        body: JSON.stringify({
+          userId: adjustUserId,
+          amount: Number(adjustAmount),
+          reason: adjustReason.trim(),
+          adminNotes: adjustNotes.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showFeedback(data.message || 'PEP-ka si guul leh ayaa loo beddelay.');
+        setAdjustAmount('');
+        setAdjustReason('');
+        setAdjustNotes('');
+        await loadData();
+      } else {
+        showFeedback(data.error || 'Khalad ayaa dhacay.');
+      }
+    } catch (e) {
+      showFeedback('Khalad xagga xiriirka ah ayaa dhacay.');
+    } finally {
+      setIsAdjustingPep(false);
+    }
   };
 
   useEffect(() => {
@@ -397,7 +511,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {!isAuthenticated ? (
         <div className="m-auto w-full max-w-sm bg-white rounded-2xl shadow-xl border border-gray-200 p-6 space-y-4">
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mx-auto text-blue-600">
+            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mx-auto text-red-600">
               <Lock className="w-5 h-5" />
             </div>
             <h2 className="text-base font-bold text-gray-900">Gelitaanka Maamulka</h2>
@@ -416,7 +530,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="Geli PIN-ka..."
-                className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600"
               />
             </div>
 
@@ -431,13 +545,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2 rounded-lg border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+                className="flex-1 py-2 rounded-lg border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 cursor-pointer"
               >
                 Ka noqo
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-xs font-semibold text-white shadow-sm"
+                className="flex-1 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-xs font-semibold text-white shadow-sm cursor-pointer"
               >
                 Gal
               </button>
@@ -451,7 +565,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <aside className="w-60 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0">
             <div className="p-4 border-b border-gray-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
+                <div className="w-7 h-7 rounded-lg bg-red-600 flex items-center justify-center font-bold text-white text-sm">
                   S
                 </div>
                 <span className="font-bold text-gray-900 text-sm">SomTopUp Admin</span>
@@ -463,7 +577,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onClick={() => setActiveTab('orders')}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'orders'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -473,7 +587,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
                 {underVerificationOrders + awaitingPaymentReview > 0 && (
                   <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                    activeTab === 'orders' ? 'bg-white text-blue-600' : 'bg-blue-600 text-white'
+                    activeTab === 'orders' ? 'bg-white text-red-600' : 'bg-red-600 text-white'
                   }`}>
                     {underVerificationOrders + awaitingPaymentReview}
                   </span>
@@ -484,7 +598,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onClick={() => setActiveTab('efootball_verifications')}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'efootball_verifications'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -505,7 +619,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onClick={() => setActiveTab('overview')}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'overview'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -517,7 +631,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onClick={() => setActiveTab('packages')}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'packages'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -529,7 +643,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onClick={() => setActiveTab('payments')}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'payments'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -538,10 +652,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </button>
 
               <button
+                onClick={() => setActiveTab('pep')}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  activeTab === 'pep'
+                    ? 'bg-red-600 text-white shadow-sm'
+                    : 'hover:bg-gray-200/60 hover:text-gray-900'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Award className="w-4 h-4" />
+                  <span>Nidaamka PEP</span>
+                </div>
+                <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                  activeTab === 'pep' ? 'bg-white text-red-600' : 'bg-red-100 text-red-700'
+                }`}>
+                  Rewards
+                </span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('telegram')}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'telegram'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -553,7 +686,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 onClick={() => setActiveTab('analytics')}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'analytics'
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-red-600 text-white shadow-sm'
                     : 'hover:bg-gray-200/60 hover:text-gray-900'
                 }`}
               >
@@ -570,7 +703,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Ka bax</span>
               </button>
-              <button onClick={onClose} className="text-blue-600 hover:underline cursor-pointer">
+              <button onClick={onClose} className="text-red-600 hover:underline cursor-pointer">
                 Suuqa
               </button>
             </div>
@@ -618,7 +751,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <select
                         value={orderFilterGame}
                         onChange={(e) => setOrderFilterGame(e.target.value as any)}
-                        className="bg-white border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-blue-600"
+                        className="bg-white border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-red-600"
                       >
                         <option value="All">Dhammaan Ciyaaraha</option>
                         <option value="PUBG Mobile">PUBG Mobile</option>
@@ -628,17 +761,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <select
                         value={orderFilterStatus}
                         onChange={(e) => setOrderFilterStatus(e.target.value)}
-                        className="bg-white border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-blue-600"
+                        className="bg-white border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-red-600"
                       >
                         <option value="All">Dhammaan Xaaladaha</option>
                         <option value="Hubin ku socoto">Hubin ku socoto (eFootball Code)</option>
-                        <option value="Sugaya Hubin">Sugaya Hubin (Lacagta)</option>
+                        <option value="Sugaya Hubin">Sugaya Hubin (Payment Verification Pending)</option>
                         <option value="Sugaya Xaqiijin">Sugaya Xaqiijin</option>
-                        <option value="Sugaya Lacag-bixin">Sugaya Lacag-bixin</option>
-                        <option value="Waa la shaqaynayaa">Waa la shaqaynayaa</option>
-                        <option value="Waa la dhammaystiray">Waa la dhammaystiray</option>
+                        <option value="Sugaya Lacag-bixin">Sugaya Lacag-bixin (Unpaid)</option>
+                        <option value="Waa la shaqaynayaa">Waa la shaqaynayaa (Processing)</option>
+                        <option value="Waa la dhammaystiray">Waa la dhammaystiray (Completed)</option>
                         <option value="Xaqiijintu way fashilantay">Xaqiijintu way fashilantay</option>
-                        <option value="Wuu fashilmay">Wuu fashilmay</option>
+                        <option value="Wuu fashilmay">Wuu fashilmay (Failed)</option>
+                        <option value="Waa la kansalay">Waa la kansalay (Cancelled)</option>
                       </select>
                     </div>
 
@@ -648,7 +782,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         value={orderSearchQuery}
                         onChange={(e) => setOrderSearchQuery(e.target.value)}
                         placeholder="Raadi Order ID, Player ID, Phone..."
-                        className="w-full bg-white border border-gray-300 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-600"
+                        className="w-full bg-white border border-gray-300 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-red-600"
                       />
                       <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                     </div>
@@ -675,10 +809,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <tr
                               key={o.id}
                               className={`hover:bg-gray-50 transition-colors ${
-                                selectedOrder?.id === o.id ? 'bg-blue-50/40' : ''
+                                selectedOrder?.id === o.id ? 'bg-red-50/40' : ''
                               }`}
                             >
-                              <td className="py-2.5 px-3 font-mono font-bold text-blue-600">{o.id}</td>
+                              <td className="py-2.5 px-3 font-mono font-bold text-red-600">{o.id}</td>
                               <td className="py-2.5 px-3">{o.game}</td>
                               <td className="py-2.5 px-3">{o.packageCredits}</td>
                               <td className="py-2.5 px-3 tabular-nums font-bold">${o.price.toFixed(2)}</td>
@@ -694,8 +828,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                   </div>
                                 )}
                                 {o.senderPhoneNumber && (
-                                  <div className="text-[11px] font-mono text-blue-700">
+                                  <div className="text-[11px] font-mono text-gray-900 font-semibold">
                                     Tel: {o.senderPhoneNumber}
+                                  </div>
+                                )}
+                                {o.transactionReference && (
+                                  <div className="text-[10px] font-mono text-red-600">
+                                    Ref: {o.transactionReference}
                                   </div>
                                 )}
                               </td>
@@ -708,7 +847,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                     : o.status === 'Sugaya Hubin'
                                     ? 'bg-amber-50 text-amber-700'
                                     : o.status === 'Waa la shaqaynayaa'
-                                    ? 'bg-blue-50 text-blue-700'
+                                    ? 'bg-purple-50 text-purple-700'
+                                    : o.status === 'Sugaya Lacag-bixin'
+                                    ? 'bg-amber-50 text-amber-800'
                                     : o.status === 'Wuu fashilmay' || o.status === 'Xaqiijintu way fashilantay'
                                     ? 'bg-red-50 text-red-700'
                                     : 'bg-gray-100 text-gray-700'
@@ -720,7 +861,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => setSelectedOrder(o)}
-                                  className="px-2.5 py-1 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold cursor-pointer"
+                                  className="px-2.5 py-1 rounded-md bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold cursor-pointer"
                                 >
                                   Faahfaahin
                                 </button>
@@ -740,10 +881,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                   {/* ORDER DETAIL VIEW (PART 10) */}
                   {selectedOrder && (
-                    <div className="p-5 rounded-2xl bg-white border-2 border-blue-200 shadow-sm space-y-5">
+                    <div className="p-5 rounded-2xl bg-white border-2 border-red-200 shadow-sm space-y-5">
                       <div className="flex items-center justify-between pb-3 border-b border-gray-200">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-base font-bold text-blue-600">
+                          <span className="font-mono text-base font-bold text-red-600">
                             {selectedOrder.id}
                           </span>
                           <span className="text-xs bg-gray-100 text-gray-800 font-semibold px-2 py-0.5 rounded">
@@ -861,15 +1002,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <span className="font-bold text-gray-700 uppercase tracking-wider block text-[11px]">
                             Xogta Lacag-bixinta
                           </span>
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
                             <div>
                               <span className="text-gray-500 block">Habka:</span>
                               <span className="font-medium text-gray-900">{selectedOrder.paymentMethodName || 'Lama dooran'}</span>
                             </div>
                             <div>
                               <span className="text-gray-500 block">Lambarka Laga Soo Diray:</span>
-                              <span className="font-mono font-bold text-blue-700 text-sm">
+                              <span className="font-mono font-bold text-gray-900 text-sm">
                                 {selectedOrder.senderPhoneNumber || 'Weli lama soo dirin'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500 block">Tixraaca (Ref No):</span>
+                              <span className="font-mono font-bold text-red-600 text-sm">
+                                {selectedOrder.transactionReference || 'Lama gelin'}
                               </span>
                             </div>
                             <div>
@@ -882,13 +1029,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           {selectedOrder.status === 'Sugaya Hubin' && (
                             <div className="pt-2 border-t border-gray-200 flex flex-col gap-2">
                               <span className="text-[11px] text-gray-500">
-                                Hubi koontadaada lacagta lagu helay lambarka kor ku xusan, kadibna:
+                                Hubi koontadaada lacagta lagu helay lambarka kor ku xusan ama tixraaca, kadibna:
                               </span>
                               <div className="flex gap-2">
                                 <button
                                   type="button"
                                   onClick={handleConfirmPayment}
-                                  className="flex-1 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs cursor-pointer shadow-sm"
+                                  className="flex-1 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold text-xs cursor-pointer shadow-sm"
                                 >
                                   Xaqiiji Lacagta (U wareeji Shaqo)
                                 </button>
@@ -1227,7 +1374,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           displayOrder: packages.length + 1,
                         })
                       }
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs flex items-center gap-1 cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold text-xs flex items-center gap-1 cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Ku dar</span>
@@ -1279,10 +1426,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </div>
 
                       <div className="flex justify-end gap-2 pt-2">
-                        <button type="button" onClick={() => setEditingPackage(null)} className="px-3 py-1.5 rounded-lg border border-gray-300">
+                        <button type="button" onClick={() => setEditingPackage(null)} className="px-3 py-1.5 rounded-lg border border-gray-300 cursor-pointer">
                           Ka noqo
                         </button>
-                        <button type="submit" className="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white font-semibold">
+                        <button type="submit" className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold cursor-pointer">
                           Kaydi
                         </button>
                       </div>
@@ -1326,7 +1473,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {/* TAB: PAYMENTS */}
               {activeTab === 'payments' && (
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold text-gray-900">Hababka Lacag-bixinta</h3>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900">Hababka Lacag-bixinta & Gateway</h3>
+                    <p className="text-xs text-gray-500">
+                      Maamulka lacag-bixinta mobaylka iyo xaaladda rasmiga ah ee Payment Gateway-ga.
+                    </p>
+                  </div>
+
+                  {/* Payment Gateway Status Card */}
+                  <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/70 space-y-2.5 text-xs text-amber-900">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-amber-700" />
+                        <span className="font-bold text-amber-900">Xaaladda Payment Gateway-ga (Gateway Status)</span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-800 uppercase">
+                        Manual Wallet Mode
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-amber-800 leading-relaxed">
+                      Aqoonsiga tooska ah ee API-ga (Automated Payment Gateway API Credentials) weli laguma xirin server environment variables. SomTopUp waxay si buuxda ugu shaqaynaysaa habka xaqiijinta tooska ah ee boorsooyinka (Hormuud USSD & Sahal manual wallet transfer with sender phone and admin verification).
+                    </p>
+
+                    <div className="pt-1 border-t border-amber-200/60 text-[10px] space-y-1 font-mono text-amber-800">
+                      <span className="font-sans font-bold block uppercase tracking-wider text-amber-900">Config Status:</span>
+                      <div>• PAYMENT_GATEWAY_API_URL: <span className="text-amber-700">Not Configured</span></div>
+                      <div>• PAYMENT_GATEWAY_API_KEY: <span className="text-amber-700">Not Configured</span></div>
+                      <div>• PAYMENT_GATEWAY_SECRET: <span className="text-amber-700">Not Configured</span></div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {paymentMethods.map((m) => (
                       <div key={m.id} className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2 text-xs">
@@ -1361,6 +1538,342 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB: PEP REWARDS MANAGEMENT & AUDIT LEDGER */}
+              {activeTab === 'pep' && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                      <Award className="w-4 h-4 text-red-600" />
+                      <span>Nidaamka Abaal-marinta Gudaha ee PEP (PEP Internal Currency)</span>
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      U deji qiimaha sarrifka PEP, xeerka kasbashada dalabyada PUBG Mobile, iyo diiwaanka xisaab-xirka (Audit Ledger).
+                    </p>
+                  </div>
+
+                  {/* Top Metric Cards */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs">
+                    <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 space-y-1">
+                      <span className="text-gray-500 text-[11px] block font-medium">Sarrifka PEP / $1 USD</span>
+                      <span className="text-xl font-black text-gray-900 tabular-nums">
+                        {pepSettings.conversionRatePerUsd} PEP
+                      </span>
+                      <span className="text-[10px] text-gray-400 block">Qiimaha 1 Dollar</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-red-50/70 border border-red-200 space-y-1">
+                      <span className="text-red-700 text-[11px] block font-bold">Bartilmaameedka Abaal-marinta</span>
+                      <span className="text-xl font-black text-red-600 tabular-nums">
+                        {Math.round(10 * (pepSettings.conversionRatePerUsd || 100)).toLocaleString()} PEP
+                      </span>
+                      <span className="text-[10px] text-red-700/80 block">U dhiganta $10 USD</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 space-y-1">
+                      <span className="text-gray-500 text-[11px] block font-medium">Xeerka Kasbashada (Earning)</span>
+                      <span className="text-xl font-black text-gray-900 tabular-nums">
+                        +{pepSettings.earningRatePerUsd} PEP
+                      </span>
+                      <span className="text-[10px] text-gray-400 block">$1 kasta oo PUBG la shubto</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 space-y-1">
+                      <span className="text-gray-500 text-[11px] block font-medium">Dhaqdhaqaaqa Ledger-ka</span>
+                      <span className="text-xl font-black text-blue-600 tabular-nums">
+                        {pepLedger.length}
+                      </span>
+                      <span className="text-[10px] text-gray-400 block">Diiwaanka la hayo</span>
+                    </div>
+                  </div>
+
+                  {/* 2-Column: PEP Settings & Manual Adjustment Form */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    {/* Column 1: Configurable PEP Settings */}
+                    <form onSubmit={handleSavePepSettings} className="p-4 sm:p-5 rounded-2xl bg-white border border-gray-200 shadow-2xs space-y-4 text-xs">
+                      <div className="border-b border-gray-100 pb-2.5">
+                        <h4 className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                          <Sliders className="w-4 h-4 text-red-600" />
+                          <span>Habaynta Sarrifka & Xeerka PEP (Admin Settings)</span>
+                        </h4>
+                        <span className="text-[11px] text-gray-500">
+                          Isbeddellada waxaa lagu dabaqayaa dhammaan xisaabinta bartilmaameedka iyo dalabyada cusub.
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="block font-bold text-gray-800 mb-1">
+                          PEP-to-USD Conversion Rate:
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={1}
+                            max={10000}
+                            required
+                            value={pepSettings.conversionRatePerUsd}
+                            onChange={(e) =>
+                              setPepSettings({
+                                ...pepSettings,
+                                conversionRatePerUsd: Number(e.target.value),
+                              })
+                            }
+                            className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600"
+                          />
+                          <span className="text-gray-500 shrink-0 font-bold">PEP = $1 USD</span>
+                        </div>
+                        <div className="mt-1.5 p-2 rounded-lg bg-red-50 text-[11px] text-red-900 font-semibold border border-red-100">
+                          Bartilmaameedka Abaal-marinta (Equivalent of USD $10):{' '}
+                          <span className="font-black text-red-700">
+                            {Math.round(10 * (pepSettings.conversionRatePerUsd || 100)).toLocaleString()} PEP
+                          </span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-bold text-gray-800 mb-1">
+                          PUBG Earning Rate (PEP per $1 USD Spent):
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={0}
+                            max={500}
+                            required
+                            value={pepSettings.earningRatePerUsd}
+                            onChange={(e) =>
+                              setPepSettings({
+                                ...pepSettings,
+                                earningRatePerUsd: Number(e.target.value),
+                              })
+                            }
+                            className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600"
+                          />
+                          <span className="text-gray-500 shrink-0 font-bold">PEP / $1</span>
+                        </div>
+                        <span className="text-[10px] text-gray-400 mt-1 block">
+                          Tusaale: Dalab $4.85 ah wuxuu macaamiilka u goynayaa {Math.round(4.85 * (pepSettings.earningRatePerUsd || 20))} PEP markii la xaqiijiyo.
+                        </span>
+                      </div>
+
+                      <div className="pt-1">
+                        <label className="flex items-center gap-2 cursor-pointer font-bold text-gray-800">
+                          <input
+                            type="checkbox"
+                            checked={pepSettings.enabled}
+                            onChange={(e) => setPepSettings({ ...pepSettings, enabled: e.target.checked })}
+                            className="rounded border-gray-300 text-red-600 focus:ring-red-600 w-4 h-4"
+                          />
+                          <span>Shaqaysii Nidaamka Abaal-marinta PEP</span>
+                        </label>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSavingPepSettings}
+                        className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center justify-center gap-1.5"
+                      >
+                        <Save className="w-3.5 h-3.5" />
+                        <span>{isSavingPepSettings ? 'Waa la keydinayaa...' : 'Keydi Habaynta PEP'}</span>
+                      </button>
+                    </form>
+
+                    {/* Column 2: Manual Customer PEP Adjustment Form */}
+                    <form onSubmit={handleAdjustPep} className="p-4 sm:p-5 rounded-2xl bg-white border border-gray-200 shadow-2xs space-y-4 text-xs">
+                      <div className="border-b border-gray-100 pb-2.5">
+                        <h4 className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                          <TrendingUp className="w-4 h-4 text-red-600" />
+                          <span>Sixidda PEP-ka Macmiilka (Manual Audit Adjustment)</span>
+                        </h4>
+                        <span className="text-[11px] text-gray-500">
+                          Kudar ama ka jaro PEP akoonka macmiilka adoo diiwaangelinaya sababta hanti-dhowrka.
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="block font-bold text-gray-800 mb-1">
+                          Dooro Macmiilka: <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          required
+                          value={adjustUserId}
+                          onChange={(e) => setAdjustUserId(e.target.value)}
+                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600"
+                        >
+                          <option value="">-- Dooro akoon --</option>
+                          {customerUsers.map((u) => (
+                            <option key={u.id} value={u.id}>
+                              {u.email} ({u.name || 'Macmiil'}) — Haraaga: {u.pepBalance || 0} PEP
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block font-bold text-gray-800 mb-1">
+                          Qaddarka PEP (Amount): <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          value={adjustAmount}
+                          onChange={(e) => setAdjustAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                          placeholder="Tusaale: +100 ama -50"
+                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600"
+                        />
+                        <span className="text-[10px] text-gray-400 mt-1 block">
+                          Geli tiro togan (positive) si aad ugu darto, ama tiro taban (negative) si aad uga jarto.
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="block font-bold text-gray-800 mb-1">
+                          Sababta Sixidda (Audit Reason): <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={adjustReason}
+                          onChange={(e) => setAdjustReason(e.target.value)}
+                          placeholder="Tusaale: Abaal-marin gaar ah oo Royale Pass ama sixid khalad"
+                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isAdjustingPep}
+                        className="w-full py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-xs transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center justify-center gap-1.5"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>{isAdjustingPep ? 'Waa la xaqiijinayaa...' : 'Diiwaangeli Sixidda PEP'}</span>
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Customer Accounts & Balances Table */}
+                  <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-2xs space-y-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-bold text-gray-900 text-xs flex items-center gap-2">
+                        <Users className="w-4 h-4 text-red-600" />
+                        <span>Akoonnada Macaamiisha & Haraaga PEP ({customerUsers.length})</span>
+                      </h4>
+                    </div>
+
+                    <div className="overflow-x-auto max-h-56">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-gray-200 text-gray-500 text-[11px]">
+                            <th className="py-2 px-2.5 font-semibold">Iimaylka</th>
+                            <th className="py-2 px-2.5 font-semibold">Magaca</th>
+                            <th className="py-2 px-2.5 font-semibold">Default PUBG ID</th>
+                            <th className="py-2 px-2.5 font-semibold text-right">Haraaga PEP</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {customerUsers.length > 0 ? (
+                            customerUsers.map((u) => (
+                              <tr key={u.id} className="hover:bg-gray-50/70">
+                                <td className="py-2 px-2.5 font-mono text-gray-900">{u.email}</td>
+                                <td className="py-2 px-2.5 text-gray-700">{u.name || '—'}</td>
+                                <td className="py-2 px-2.5 font-mono text-gray-600">{u.defaultPlayerId || '—'}</td>
+                                <td className="py-2 px-2.5 text-right font-black text-red-600 tabular-nums">
+                                  {(u.pepBalance || 0).toLocaleString()} PEP
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan={4} className="py-4 text-center text-gray-400">
+                                Weli ma jiraan macaamiil diiwaangashan.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Complete Auditable PEP Ledger */}
+                  <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-2xs space-y-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-bold text-gray-900 text-xs flex items-center gap-2">
+                        <History className="w-4 h-4 text-red-600" />
+                        <span>Diiwaanka Rasmiga ah ee Dhaqdhaqaaqa PEP (Audit Ledger — {pepLedger.length})</span>
+                      </h4>
+                    </div>
+
+                    <div className="overflow-x-auto max-h-72">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-gray-200 text-gray-500 text-[11px]">
+                            <th className="py-2 px-2.5 font-semibold">Taariikhda</th>
+                            <th className="py-2 px-2.5 font-semibold">Macmiilka</th>
+                            <th className="py-2 px-2.5 font-semibold">Nooca</th>
+                            <th className="py-2 px-2.5 font-semibold text-right">Qaddarka</th>
+                            <th className="py-2 px-2.5 font-semibold text-right">Haraaga Kadib</th>
+                            <th className="py-2 px-2.5 font-semibold">Sharaxaad / Order ID</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {pepLedger.length > 0 ? (
+                            pepLedger.map((item) => (
+                              <tr key={item.id} className="hover:bg-gray-50/70 text-[11px]">
+                                <td className="py-2 px-2.5 text-gray-500 whitespace-nowrap">
+                                  {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </td>
+                                <td className="py-2 px-2.5 font-mono text-gray-900">{item.userEmail}</td>
+                                <td className="py-2 px-2.5">
+                                  <span
+                                    className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase ${
+                                      item.type === 'earned'
+                                        ? 'bg-green-100 text-green-800'
+                                        : item.type === 'adjusted'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : 'bg-red-100 text-red-800'
+                                    }`}
+                                  >
+                                    {item.type}
+                                  </span>
+                                </td>
+                                <td
+                                  className={`py-2 px-2.5 text-right font-black tabular-nums ${
+                                    item.amount > 0 ? 'text-green-600' : 'text-red-600'
+                                  }`}
+                                >
+                                  {item.amount > 0 ? `+${item.amount}` : item.amount} PEP
+                                </td>
+                                <td className="py-2 px-2.5 text-right font-bold text-gray-800 tabular-nums">
+                                  {item.balanceAfter} PEP
+                                </td>
+                                <td className="py-2 px-2.5 text-gray-700">
+                                  <span>{item.description}</span>
+                                  {item.orderId && (
+                                    <span className="font-mono text-red-600 font-bold ml-1.5">
+                                      ({item.orderId})
+                                    </span>
+                                  )}
+                                  {item.adminNotes && (
+                                    <span className="text-gray-400 italic block text-[10px]">
+                                      Note: {item.adminNotes}
+                                    </span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan={6} className="py-6 text-center text-gray-400">
+                                Diiwaanka PEP weli wax dhaqdhaqaaq ah kuma jiraan.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               )}

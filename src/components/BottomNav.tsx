@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Home, Gamepad2, ShoppingBag, User, MoreHorizontal, Phone, MessageCircle, X } from 'lucide-react';
+import { useLanguage } from '../services/language.tsx';
+import { GameType } from '../types';
 
 interface BottomNavProps {
   onOpenTracking: () => void;
-  onSelectGame: (game: 'All' | 'PUBG Mobile' | 'eFootball') => void;
+  onSelectGame: (game: 'All' | GameType) => void;
   currentPath?: string;
+  onOpenAuth?: () => void;
 }
 
 type NavItemKey = 'home' | 'games' | 'orders' | 'profile' | 'more';
@@ -13,16 +16,17 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onOpenTracking,
   onSelectGame,
   currentPath = '/',
+  onOpenAuth,
 }) => {
   const [activeTab, setActiveTab] = useState<NavItemKey>('home');
   const [isMoreSheetOpen, setIsMoreSheetOpen] = useState(false);
+  const { language, t } = useLanguage();
 
-  // Derive active tab from current route
   React.useEffect(() => {
     const p = currentPath.toLowerCase();
     if (p.includes('/orders') || p.includes('/my-orders')) {
       setActiveTab('orders');
-    } else if (p.includes('/games/') || p.includes('/pubg') || p.includes('/efootball')) {
+    } else if (p.includes('/games/') || p.includes('/pubg')) {
       setActiveTab('games');
     } else {
       setActiveTab('home');
@@ -49,8 +53,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     } else if (key === 'orders') {
       onOpenTracking();
     } else if (key === 'profile') {
-      // In customer mobile view, profile directs to their order history / tracking
-      onOpenTracking();
+      if (onOpenAuth) onOpenAuth();
+      else onOpenTracking();
     } else if (key === 'more') {
       setIsMoreSheetOpen(true);
     }
@@ -58,70 +62,70 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 
   return (
     <>
-      {/* Fixed Bottom Bar on Mobile */}
+      {/* Fixed Bottom Bar on Mobile (Red Active State) */}
       <nav
         aria-label="Mobile Navigation"
         className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 pb-safe shadow-md"
       >
         <div className="grid grid-cols-5 items-center justify-around py-1 px-1">
-          {/* 1. Hoy */}
+          {/* 1. Hoy / Home */}
           <button
             type="button"
             onClick={() => handleTabClick('home')}
             className={`flex flex-col items-center justify-center py-1 px-1 cursor-pointer transition-colors ${
-              activeTab === 'home' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900'
+              activeTab === 'home' ? 'text-red-600 font-bold' : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <Home className="w-5 h-5 shrink-0" />
-            <span className="text-[10px] mt-0.5 tracking-tight truncate">Hoy</span>
+            <span className="text-[10px] mt-0.5 tracking-tight truncate">{t('home', 'Hoy')}</span>
           </button>
 
-          {/* 2. Ciyaaraha */}
+          {/* 2. Ciyaaraha / Games */}
           <button
             type="button"
             onClick={() => handleTabClick('games')}
             className={`flex flex-col items-center justify-center py-1 px-1 cursor-pointer transition-colors ${
-              activeTab === 'games' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900'
+              activeTab === 'games' ? 'text-red-600 font-bold' : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <Gamepad2 className="w-5 h-5 shrink-0" />
-            <span className="text-[10px] mt-0.5 tracking-tight truncate">Ciyaaraha</span>
+            <span className="text-[10px] mt-0.5 tracking-tight truncate">{t('games', 'Ciyaaraha')}</span>
           </button>
 
-          {/* 3. Dalabyada */}
+          {/* 3. Dalabyada / Orders */}
           <button
             type="button"
             onClick={() => handleTabClick('orders')}
             className={`flex flex-col items-center justify-center py-1 px-1 cursor-pointer transition-colors ${
-              activeTab === 'orders' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900'
+              activeTab === 'orders' ? 'text-red-600 font-bold' : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <ShoppingBag className="w-5 h-5 shrink-0" />
-            <span className="text-[10px] mt-0.5 tracking-tight truncate">Dalabyada</span>
+            <span className="text-[10px] mt-0.5 tracking-tight truncate">{t('orders', 'Dalabyada')}</span>
           </button>
 
-          {/* 4. Akoon */}
+          {/* 4. Akoon / Account */}
           <button
             type="button"
             onClick={() => handleTabClick('profile')}
             className={`flex flex-col items-center justify-center py-1 px-1 cursor-pointer transition-colors ${
-              activeTab === 'profile' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900'
+              activeTab === 'profile' ? 'text-red-600 font-bold' : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <User className="w-5 h-5 shrink-0" />
-            <span className="text-[10px] mt-0.5 tracking-tight truncate">Akoon</span>
+            <span className="text-[10px] mt-0.5 tracking-tight truncate">{t('account', 'Akoon')}</span>
           </button>
 
-          {/* 5. Wax badan */}
+          {/* 5. Wax badan / More */}
           <button
             type="button"
             onClick={() => handleTabClick('more')}
             className={`flex flex-col items-center justify-center py-1 px-1 cursor-pointer transition-colors ${
-              activeTab === 'more' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900'
+              activeTab === 'more' ? 'text-red-600 font-bold' : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <MoreHorizontal className="w-5 h-5 shrink-0" />
-            <span className="text-[10px] mt-0.5 tracking-tight truncate">Wax badan</span>
+            <span className="text-[10px] mt-0.5 tracking-tight truncate">{t('more', 'Wax badan')}</span>
           </button>
         </div>
       </nav>
@@ -137,12 +141,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span className="text-sm font-bold text-gray-900">Adeegyo Dheeraad ah</span>
+              <span className="text-sm font-bold text-gray-900">
+                {language === 'so' ? 'Adeegyo Dheeraad ah' : 'More Services'}
+              </span>
               <button
                 type="button"
                 onClick={() => setIsMoreSheetOpen(false)}
-                className="p-1 text-gray-400 hover:text-gray-600"
-                aria-label="Xir"
+                className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                aria-label="Close"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -155,10 +161,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                   setIsMoreSheetOpen(false);
                   onOpenTracking();
                 }}
-                className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-800 font-medium"
+                className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-800 font-medium cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4 text-blue-600" />
-                <span>Raadi Xaaladda Dalabkaaga</span>
+                <ShoppingBag className="w-4 h-4 text-red-600" />
+                <span>{language === 'so' ? 'Raadi Xaaladda Dalabkaaga' : 'Track Your Order Status'}</span>
               </button>
 
               <a
@@ -168,20 +174,20 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                 className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-green-200 bg-green-50/50 hover:bg-green-50 text-green-800 font-medium"
               >
                 <MessageCircle className="w-4 h-4 text-green-600" />
-                <span>Taageerada WhatsApp (+252 61 5482390)</span>
+                <span>WhatsApp (+252 61 5482390)</span>
               </a>
 
               <a
                 href="tel:+252615482390"
                 className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-800 font-medium"
               >
-                <Phone className="w-4 h-4 text-blue-600" />
-                <span>Wac Taageerada Tooska ah</span>
+                <Phone className="w-4 h-4 text-red-600" />
+                <span>{language === 'so' ? 'Wac Taageerada Tooska ah' : 'Call Support Directly'}</span>
               </a>
             </div>
 
             <div className="pt-2 text-center text-[11px] text-gray-400">
-              SomTopUp v2.5 — Suuqa Ciyaaraha Soomaaliyeed
+              SomTopUp — Suuqa Ciyaaraha Soomaaliyeed
             </div>
           </div>
         </div>

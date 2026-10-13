@@ -1,6 +1,7 @@
 import React from 'react';
 import { GamePackage } from '../types';
 import { Check } from 'lucide-react';
+import { useLanguage } from '../services/language.tsx';
 
 interface PackageCardProps {
   pkg: GamePackage;
@@ -8,6 +9,7 @@ interface PackageCardProps {
 }
 
 export const PackageCard: React.FC<PackageCardProps> = ({ pkg, onSelect }) => {
+  const { language } = useLanguage();
   const isPubg = pkg.game === 'PUBG Mobile';
   const hasDiscount = pkg.originalPrice && pkg.originalPrice > pkg.price;
   const discountPercent = hasDiscount
@@ -17,11 +19,11 @@ export const PackageCard: React.FC<PackageCardProps> = ({ pkg, onSelect }) => {
   return (
     <div
       onClick={() => onSelect(pkg)}
-      className="group rounded-xl bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden cursor-pointer p-4"
+      className="group rounded-xl bg-white border border-gray-200 hover:border-red-500 hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden cursor-pointer p-4"
     >
       <div>
         <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="text-[11px] font-semibold text-blue-600">
+          <span className="text-[11px] font-bold text-red-600">
             {pkg.game}
           </span>
 
@@ -43,14 +45,14 @@ export const PackageCard: React.FC<PackageCardProps> = ({ pkg, onSelect }) => {
             className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
               isPubg
                 ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                : 'bg-blue-50 text-blue-700 border border-blue-200'
+                : 'bg-red-50 text-red-700 border border-red-200'
             }`}
           >
             {isPubg ? 'UC' : 'COIN'}
           </div>
 
           <div className="min-w-0">
-            <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-tight">
+            <h3 className="text-base font-bold text-gray-900 group-hover:text-red-600 transition-colors leading-tight">
               {pkg.credits}
             </h3>
             <p className="text-xs text-gray-500 truncate">{pkg.name}</p>
@@ -77,7 +79,7 @@ export const PackageCard: React.FC<PackageCardProps> = ({ pkg, onSelect }) => {
             )}
           </div>
           <span className="text-[10px] text-green-600 font-medium flex items-center gap-0.5">
-            <Check className="w-3 h-3" /> La heli karo
+            <Check className="w-3 h-3" /> {language === 'so' ? 'La heli karo' : 'Available'}
           </span>
         </div>
 
@@ -87,9 +89,9 @@ export const PackageCard: React.FC<PackageCardProps> = ({ pkg, onSelect }) => {
             e.stopPropagation();
             onSelect(pkg);
           }}
-          className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors cursor-pointer"
+          className="px-3.5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold text-xs transition-colors cursor-pointer active:scale-98"
         >
-          Dooro
+          {language === 'so' ? 'Dooro' : 'Select'}
         </button>
       </div>
     </div>
