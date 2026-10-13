@@ -1,8 +1,7 @@
-node_modules/
-build/
-dist/
-coverage/
-.DS_Store
-*.log
-.env*
-!.env.example
+# Local data and secrets
+
+# Ignore the runtime database file (local only)
+/data/db.json
+
+# Ignore the admin sessions saved in browser storage dev file if any
+/.local_admin_session
